@@ -8,10 +8,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import SavedList from './components/SavedList';
+
 export default function App() {
   const [orgPrice, setOrgPrice] = useState('');
   const [disPercent, setDisPercent] = useState('');
-  // const [final, setFinal] = useState({});
+  const [tempStorage, setTempStorage] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const orgPriceHandler = (price) => {
     if (price >= 0) {
@@ -33,26 +36,40 @@ export default function App() {
     let finalAmount = orgPrice - saveAmount();
     return finalAmount.toFixed(2);
   };
-
   const clearInputData = () => {
     setOrgPrice('');
     setDisPercent('');
-  }
+  };
 
-  return (
-    <View style={styles.container}>
+  const saveInputData = () => {
+    const newData = {
+      id: Math.random(),
+      Original_Price: orgPrice,
+      DiscountPercentage: disPercent,
+      FinalPriceAfterDiscount: 21,
+    };
+    setTempStorage([...tempStorage, newData]);
+    console.log(tempStorage);
+  };
+
+  const hideModal = () => {
+    setShowModal(false);
+  };
+
+  const MainPage = () => (
+    <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          margin: 40,
+        }}>
+        <TouchableOpacity onPress={() => setShowModal(true)}>
+          <Text>STORED RECORDS</Text>
+        </TouchableOpacity>
+      </View>
+
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            margin: 40,
-          }}>
-          <TouchableOpacity>
-            <Text>STORED RECORDS</Text>
-          </TouchableOpacity>
-        </View>
-
         <Text>Original Price:</Text>
         <TextInput
           style={styles.inputFields}
@@ -67,35 +84,47 @@ export default function App() {
           onChangeText={disPercentHandler}
           value={disPercent}
         />
-
-        <View style={{ textAlign: 'center' }}>
-          <Text>
-            {orgPrice !== 0 && disPercent !== 0
-              ? 'You Save : $' + saveAmount()
-              : ''}
-          </Text>
-          <Text>
-            {orgPrice !== 0 && disPercent !== 0
-              ? 'Final Price : $' + finalPrice()
-              : ''}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            margin: 20,
-          }}>
-          <TouchableOpacity style={styles.btnSave}>
-            <Text>SAVE</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.btnClear} onPress={() => clearInputData()}>
-            <Text>CLEAR</Text>
-          </TouchableOpacity>
-        </View>
       </View>
+
+      <View style={{ textAlign: 'center' }}>
+        <Text>
+          {orgPrice !== 0 && disPercent !== 0
+            ? 'You Save : $' + saveAmount()
+            : ''}
+        </Text>
+        <Text>
+          {orgPrice !== 0 && disPercent !== 0
+            ? 'Final Price : $' + finalPrice()
+            : ''}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          margin: 20,
+        }}>
+        <TouchableOpacity style={styles.btnSave} onPress={saveInputData}>
+          <Text>SAVE</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.btnClear}
+          onPress={() => clearInputData()}>
+          <Text>CLEAR</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {showModal === false ? (
+        <MainPage />
+      ) : (
+        <SavedList list={tempStorage} hideModal={() => hideModal()} />
+      )}
     </View>
   );
 }
