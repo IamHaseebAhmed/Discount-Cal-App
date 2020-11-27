@@ -46,87 +46,86 @@ export default function App() {
       id: Math.random(),
       Original_Price: orgPrice,
       DiscountPercentage: disPercent,
-      FinalPriceAfterDiscount: 21,
+      FinalPriceAfterDiscount: finalPrice(),
     };
     setTempStorage([...tempStorage, newData]);
-    console.log(tempStorage);
   };
 
   const hideModal = () => {
     setShowModal(false);
   };
 
-  const MainPage = () => (
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          margin: 40,
-        }}>
-        <TouchableOpacity onPress={() => setShowModal(true)}>
-          <Text>STORED RECORDS</Text>
-        </TouchableOpacity>
-      </View>
+  const showScreens = () => {
+    if (showModal === false) {
+      return (
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              margin: 40,
+            }}>
+            <TouchableOpacity
+              style={styles.storedBtn}
+              onPress={() => setShowModal(true)}>
+              <Text>STORED RECORDS</Text>
+            </TouchableOpacity>
+          </View>
 
-      <View>
-        <Text>Original Price:</Text>
-        <TextInput
-          style={styles.inputFields}
-          keyboardType="numeric"
-          onChangeText={orgPriceHandler}
-          value={orgPrice}
-        />
-        <Text>Discount Percentage:</Text>
-        <TextInput
-          style={styles.inputFields}
-          keyboardType="numeric"
-          onChangeText={disPercentHandler}
-          value={disPercent}
-        />
-      </View>
+          <View>
+            <Text>Original Price:</Text>
+            <TextInput
+              style={styles.inputFields}
+              keyboardType="numeric"
+              onChangeText={orgPriceHandler}
+              value={orgPrice}
+            />
+            <Text>Discount Percentage:</Text>
+            <TextInput
+              style={styles.inputFields}
+              keyboardType="numeric"
+              onChangeText={disPercentHandler}
+              value={disPercent}
+            />
+          </View>
 
-      <View style={{ textAlign: 'center' }}>
-        <Text>
-          {orgPrice !== 0 && disPercent !== 0
-            ? 'You Save : $' + saveAmount()
-            : ''}
-        </Text>
-        <Text>
-          {orgPrice !== 0 && disPercent !== 0
-            ? 'Final Price : $' + finalPrice()
-            : ''}
-        </Text>
-      </View>
+          <View style={{ textAlign: 'center' }}>
+            <Text>
+              {orgPrice !== 0 && disPercent !== 0
+                ? 'You Save : $' + saveAmount()
+                : ''}
+            </Text>
+            <Text>
+              {orgPrice !== 0 && disPercent !== 0
+                ? 'Final Price : $' + finalPrice()
+                : ''}
+            </Text>
+          </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          margin: 20,
-        }}>
-        <TouchableOpacity style={styles.btnSave} onPress={saveInputData}>
-          <Text>SAVE</Text>
-        </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              margin: 20,
+            }}>
+            <TouchableOpacity style={styles.btnSave} onPress={saveInputData}>
+              <Text>SAVE</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btnClear}
-          onPress={() => clearInputData()}>
-          <Text>CLEAR</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+            <TouchableOpacity
+              style={styles.btnClear}
+              onPress={() => clearInputData()}>
+              <Text>CLEAR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else {
+      return <SavedList list={tempStorage} hideModal={() => hideModal()} />;
+    }
+  };
 
-  return (
-    <View style={styles.container}>
-      {showModal === false ? (
-        <MainPage />
-      ) : (
-        <SavedList list={tempStorage} hideModal={() => hideModal()} />
-      )}
-    </View>
-  );
+  return <View style={styles.container}>{showScreens()}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -136,12 +135,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  storedBtn: {
+    padding: 10,
+    backgroundColor: '#badc58',
+    borderRadius: 10
+  },
   inputFields: {
     height: 40,
-    width: 200,
     padding: 10,
     borderWidth: 1,
     marginBottom: 30,
+    borderRadius: 5,
   },
   btnSave: {
     width: 80,

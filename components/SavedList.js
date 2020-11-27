@@ -38,11 +38,13 @@ const SavedList = (props) => {
         <Text> {'<'} BACK</Text>
       </TouchableOpacity>
 
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {DATA.length === 0 ? (<Text>Your List is empty...</Text>) : (
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -55,13 +57,19 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     margin: 20,
+    width: 70,
+    padding: 5,
+    backgroundColor: 'lightgrey',
+    borderRadius: 30,
   },
   item: {
+    // textAlign: 'center',
     justifyContent: 'center',
     backgroundColor: '#e74c3c',
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderRadius: 5
   },
   originalPrice: {
     fontSize: 14,
