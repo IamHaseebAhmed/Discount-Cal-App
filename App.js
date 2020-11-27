@@ -1,10 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 
 export default function App() {
   const [orgPrice, setOrgPrice] = useState(0);
   const [disPercent, setDisPercent] = useState(0);
+  // const [final, setFinal] = useState({});
 
   const orgPriceHandler = (price) => {
     setOrgPrice(price);
@@ -14,22 +14,36 @@ export default function App() {
     setDisPercent(percent);
   };
 
+  const saveAmount = () => {
+    let disAmount = orgPrice * ( disPercent / 100 )
+    return disAmount;
+  }
+  const finalPrice = () => {
+    let finalAmount = orgPrice - saveAmount()
+     return finalAmount;
+  }
+
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
-
       <View>
         <Text>Original Price:</Text>
         <TextInput
           style={styles.inputFields}
           onChangeText={(price) => orgPriceHandler(price)}
         />
-
         <Text>Discount Percentage:</Text>
         <TextInput
           style={styles.inputFields}
           onChangeText={(price) => disPercentHandler(price)}
         />
+
+        <Text>
+          {(orgPrice !== 0 && disPercent !== 0 ) ? "You Save: "+saveAmount() : ""}
+        </Text>
+        <Text>
+          {(orgPrice !== 0 && disPercent !== 0 ) ? "Final Price: "+finalPrice() : ""}
+        </Text>
+
       </View>
     </View>
   );
